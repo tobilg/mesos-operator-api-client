@@ -1,0 +1,34 @@
+{
+  "name": "mesos-operator-api-events-client",
+  "version": "0.1.0",
+  "description": "A tool to listen to the Mesos Operator APIs event bus",
+  "keywords": [
+    "mesos",
+    "operator",
+    "http",
+    "api",
+    "events",
+    "listener"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "publish-please": "publish-please",
+    "prepublish": "publish-please guard"
+  },
+  "author": "TobiLG",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
+  },
+  "devDependencies": {
+    "publish-please": "~2.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tobilg/mesos-operator-api-events-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tobilg/mesos-operator-api-events-client/issues"
+  }
+}
