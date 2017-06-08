@@ -1,6 +1,6 @@
 {
-  "name": "mesos-operator-api-events-client",
-  "version": "0.1.0",
+  "name": "mesos-operator-api-client",
+  "version": "0.2.0",
   "description": "A tool to listen to the Mesos Operator APIs event bus",
   "keywords": [
     "mesos",
@@ -26,9 +26,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tobilg/mesos-operator-api-events-client.git"
+    "url": "https://github.com/tobilg/mesos-operator-api-client.git"
   },
   "bugs": {
-    "url": "https://github.com/tobilg/mesos-operator-api-events-client/issues"
+    "url": "https://github.com/tobilg/mesos-operator-api-client/issues"
   }
 }
