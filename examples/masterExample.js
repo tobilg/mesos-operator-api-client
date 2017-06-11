@@ -1,10 +1,10 @@
 "use strict";
 
-// Use the MesosOperatorApiClient
-const MesosOperatorApiClient = require("../index");
+// Use the masterClient
+const masterClient = require("../index").masterClient;
 
-// Create MesosOperatorApiClient instance
-const eventsClient = new MesosOperatorApiClient({
+// Create masterClient instance
+const eventsClient = new masterClient({
     masterHost: "172.17.11.102"
 });
 

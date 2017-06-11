@@ -1,3 +1,4 @@
 "use strict";
 
-module.exports = require("./lib/MesosOperatorApiClient");
+module.exports.masterClient = require("./lib/master/masterClient");
+module.exports.agentClient = require("./lib/agent/agentClient");

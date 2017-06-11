@@ -12,9 +12,13 @@ Install as a dependency like this:
 npm install mesos-operator-api-client --save
 ```
 
-## Events
+## Master client
 
-### Known Mesos Operator API events
+The Master client can be used to connect to the Mesos Operator API like.
+
+### Events
+
+#### Known Mesos Operator API events
 
 As of the [Mesos Operator API documentation](http://mesos.apache.org/documentation/latest/operator-http-api/) and the [Mesos master.proto](https://github.com/apache/mesos/blob/master/include/mesos/v1/master/master.proto#L477) there are currently the following events:
 
@@ -26,7 +30,7 @@ As of the [Mesos Operator API documentation](http://mesos.apache.org/documentati
  
 Those events will be emitted by this client as well if they occur.
  
-### Internal events
+#### Internal events
 
 The Mesos Operator API events slient itself emits the following events:
 
@@ -35,21 +39,21 @@ The Mesos Operator API events slient itself emits the following events:
  * `reconciled`: Is emitted after `reconcile()` is called. This queries the Operator API with a separate call to the `GET_STATE` method.
  * `error`: Is emitted in case of internal or upstream errors.
 
-## Using the client
+### Using the client
 
-### Options
+#### Options
 
 You can specify the following properties when instantiating the Mesos Operator API events client:
 
  * `masterHost`: The Mesos Master hostname (or ip address). Default is `leader.mesos`.
  * `masterPort`: The Mesos Master port. Default is `5050`.
  * `masterProtocol`: The Mesos Operator API protocol (`http` or `https`). Default is `http`.
- * `masterApiUri`: The relative path where the Marathon Event Bus endpoint can be found. Default is `/api/v1`.
+ * `masterApiUri`: The relative path where the Mesos Operator API endpoint can be found. Default is `/api/v1`.
  * `masterConnectionTimeout`: The time in milliseconds after which the connection to the Mesos Master is deemed as timed out. Default is `5000`.
- * `eventTypes`: An `array` of event types emitted by Marathon (see above for a list). Default is `["SUBSCRIBED", "TASK_ADDED", "TASK_UPDATED", "AGENT_ADDED", "AGENT_REMOVED"]`.
+ * `eventTypes`: An `array` of event types emitted by the Mesos Master (see above for a list). Default is `["SUBSCRIBED", "TASK_ADDED", "TASK_UPDATED", "AGENT_ADDED", "AGENT_REMOVED"]`.
  * `handlers`: A map object consisting of handler functions for the individual Mesos Operator API events. See [below](#handler-functions) for an explanation. No defaults.
 
-### Methods for events
+#### Methods for events
 
 The Mesos Operator API events client only exposes the `subscribe()` and the `unsubscribe()` methods. You can catch all above events via `on(<eventType>, function (data) { ... }`.
 
@@ -74,7 +78,7 @@ The `callback(error, data)` function is optional, you need to add it only if you
  * `getMaintenanceSchedule(callback)`: This calls the `GET_MAINTENANCE_SCHEDULE` method.
  * `getQuota(callback)`: This calls the `GET_QUOTA` method.
 
-### Event handler functions
+#### Event handler functions
 
 The custom event handler functions can be configured by setting a map object as `handlers` property during the instantiation. Each map object's property represents a event handling function. The property name needs to match on of the Marathon event types from the [list of known Marathon events](#known-marathon-events).
 
@@ -95,18 +99,18 @@ The function arguments are:
 
  * `data`: The emitted data for the respective event
 
-### Example code
+#### Example code
 
-For a complete example, have a look at [examples/example.js](examples/example.js).
+For a complete example, have a look at [examples/masterExample.js](examples/masterExample.js).
 
 ```javascript
 "use strict";
 
 // Use the MesosOperatorApiClient
-const MesosOperatorApiClient = require("mesos-operator-api-client");
+const MasterClient = require("mesos-operator-api-client");
 
 // Create MesosOperatorApiClient instance
-const eventsClient = new MesosOperatorApiClient({
+const eventsClient = new MasterClient({
     masterHost: "172.17.11.101" // Replace with your Mesos Leader hostname or ip address
 });
 
@@ -173,3 +177,53 @@ setTimeout(function () {
     eventsClient.unsubscribe();
 }, 10000);
 ```
+## Agent client
+
+### Using the client
+
+#### Options
+
+You can specify the following properties when instantiating the Mesos Operator API events client:
+
+ * `agentHost`: The Mesos Agent hostname (or ip address). Default is `127.0.0.1`.
+ * `agentPort`: The Mesos Agent port. Default is `5051`.
+ * `agentProtocol`: The Mesos Operator API protocol (`http` or `https`). Default is `http`.
+ * `agentApiUri`: The relative path where the Mesos Operator API endpoint can be found. Default is `/api/v1`.
+ * `agentConnectionTimeout`: The time in milliseconds after which the connection to the Mesos Agent is deemed as timed out. Default is `5000`.
+
+#### Example code
+
+For a complete example, have a look at [examples/agentExample.js](examples/agentExample.js).
+
+```javascript
+"use strict";
+
+// Use the agentClient
+const AgentClient = require("mesos-operator-api-client").agentClient;
+
+// Create agentClient instance
+const agent = new AgentClient({
+    agentHost: "172.17.11.102"
+});
+
+// Call GET_HEALTH
+agent.getHealth(function (err, data) {
+    console.log(JSON.stringify(data));
+});
+```
+
+### Supported methods for specific Operator API calls
+
+The `callback(error, data)` function is optional, you need to add it only if you directly want to handle the results. Otherwise, those methods will trigger an event (starting with `received_` appended by the lowercase method name, e.g. for `GET_STATE` is `received_get_state`), which applications can listen to to receive the responses in an asynchronous way.
+
+ * `getHealth(callback)`: This calls the `GET_HEALTH` method.
+ * `getFlags(callback)`: This calls the `GET_FLAGS` method.
+ * `getVersion(callback)`: This calls the `GET_VERSION` method.
+ * `getMetrics(callback)`: This calls the `GET_METRICS` method.
+ * `getState(callback)`: This calls the `GET_STATE` method.
+ * `getContainers(callback)`: This calls the `GET_CONTAINERS` method.
+ * `getFrameworks(callback)`: This calls the `GET_FRAMEWORKS` method.
+ * `getExecutors(callback)`: This calls the `GET_EXECUTORS` method.
+ * `getTasks(callback)`: This calls the `GET_TASKS` method.
+ * `getAgent(callback)`: This calls the `GET_AGENT` method. 
+ 
