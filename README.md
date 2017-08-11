@@ -107,7 +107,7 @@ For a complete example, have a look at [examples/masterExample.js](examples/mast
 "use strict";
 
 // Use the MesosOperatorApiClient
-const MasterClient = require("mesos-operator-api-client");
+const MasterClient = require("mesos-operator-api-client").masterClient;
 
 // Create MesosOperatorApiClient instance
 const eventsClient = new MasterClient({
